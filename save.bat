@@ -11,7 +11,7 @@ set tstmp=%tstmp:_=%
 
 echo %tstmp%
 
-set archive="aYi-%tstmp%.zip"
+set archive="i3b-%tstmp%.zip"
 
 
 
@@ -26,7 +26,7 @@ del list1.txt
 7z d %archive% save.bat
 
 
-copy %archive%   C:\back\.aYi-archives\%archive%
+copy %archive%   C:\back\.i3b-archives\%archive%
 
 del %archive%
 
