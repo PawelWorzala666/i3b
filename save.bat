@@ -26,7 +26,7 @@ del list1.txt
 7z d %archive% save.bat
 
 
-copy %archive%   C:\back\.i3b-archives\%archive%
+copy %archive%   C:\back\.archives\%archive%
 
 del %archive%
 
