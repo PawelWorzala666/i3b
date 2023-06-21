@@ -313,8 +313,7 @@ format PE64 NX
 entry start
 
 
-
-include 'source/macros.inc'
+include 'include//macros.inc'
 
     ${source}
 
@@ -331,7 +330,7 @@ start:
 
 
 section '.idata' import data readable writeable
-    include 'source\\/include\\/idata.inc'
+    include 'include//idata.inc'
 `}else{
     source = source.replace(/(Main[\s\S]+)/gm,'')
 }
