@@ -1,3 +1,4 @@
+const { match } = require('assert')
 const fs = require('fs')
 function PrepareBlocks(source){
     var newSource = ''
@@ -20,6 +21,7 @@ function PrepareBlocks(source){
 
 var THREADS = []
 var MACROS = ['getPoointer','Assign']
+var PROCS = []
 
 function parseSource(source){
     function r(match,replace){
@@ -44,7 +46,16 @@ function parseSource(source){
 
 
     
-    r( /function\ (.*)\((.*?)\)(?<num>\:[0-9]+)\{([\s\S]+?)(\k<num>)\}/gm, '$1:\n$4\nret\n')
+    r( /function\ (.*)\((.*?)\)(?<num>\:[0-9]+)\{([\s\S]+?)(\k<num>)\}/gm,match=>{
+        match=match.replace('function ','')
+        match=match.substing(0,match.length-1)
+        var name = match.split('(')[0]
+        var prams = match.split('(')[1].split(')')[0]
+        PROCS.push(name)
+        prams.map(pram=>{
+            match=match.replace(new RegExp(pram,'gm'),'')
+        })
+    }
 
 
 
@@ -209,7 +220,7 @@ function parseSource(source){
 
             r(/(.*)=(.*)(invoke.*)/gm,'$3\nmov $1,rax')
 
-            r(/(.*)=(.*)/gm,'Assign $1, $2')
+            r(/(.*) = (.*)/gm,'Assign $1, $2')
         
             r(/([\w]+)\+\+/gm,'add $1,1')
         
@@ -270,7 +281,7 @@ function parseSource(source){
     r(/^[\ \t]*?([\w]+)\((.*)\)[\ \t]*?$/gm,'invoke  $1, $2')
 
 
-    r(/^[\ \t]*?(.*)[\ \t]*?=[\ \t]*?(.*)[\ \t]*?$/gm,'Assign $1, $2')//'mov rax,$2\nmov $1,rax')
+    r(/^[\ \t]*?(.*) =[\ \t]*?(.*)[\ \t]*?$/gm,'Assign $1, $2')//'mov rax,$2\nmov $1,rax')
 
 
     r(/([\w]+)\[([\w]+)\]/gm,'[$1+$2]')
@@ -288,7 +299,7 @@ function parseSource(source){
 
     //r( /(.*)\((.*)\)/gm, 'invoke $1,$2' )
 
-
+    r(/\\\\/gm,'')
 
     return source
 
@@ -319,6 +330,7 @@ include 'include//macros.inc'
 
 
 start:
+    sub	rsp,8		; Make stack dqword aligned
 
     call Main
 
